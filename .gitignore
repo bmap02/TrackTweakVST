@@ -1,0 +1,12 @@
+Builds/
+.vs/
+*.sln
+*.vcxproj*
+*.vst3
+*.exe
+*.obj
+*.log
+*.user
+*.ipch
+*.opensdf
+*.sdf
