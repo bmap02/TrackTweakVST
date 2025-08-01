@@ -9,8 +9,6 @@
 #include <atomic>
 
 //==============================================================================
-/**
-*/
 class TrackTweakAudioProcessor : public juce::AudioProcessor
 {
 public:
@@ -34,7 +32,6 @@ public:
 
     //==============================================================================
     const juce::String getName() const override;
-
     bool acceptsMidi() const override;
     bool producesMidi() const override;
     bool isMidiEffect() const override;
@@ -52,13 +49,32 @@ public:
     void setStateInformation(const void* data, int sizeInBytes) override;
 
     //==============================================================================
-    // RMS Level access for GUI
+    // Loudness measurement access for GUI
     float getRMSLevel() const;
+    float getMomentaryLUFS() const;
+    float getShortTermLUFS() const;
+    float getIntegratedLUFS() const;
 
 private:
     //==============================================================================
     // RMS calculation variables
     std::atomic<float> currentRMSLevel{ 0.0f };
+
+    // LUFS calculation variables
+    std::atomic<float> currentMomentaryLUFS{ -70.0f };
+    std::atomic<float> currentShortTermLUFS{ -70.0f };
+    std::atomic<float> currentIntegratedLUFS{ -70.0f };
+
+    // Simple circular buffers for LUFS timing
+    juce::AudioBuffer<float> momentaryBuffer;
+    juce::AudioBuffer<float> shortTermBuffer;
+    int momentaryWritePos = 0;
+    int shortTermWritePos = 0;
+    double sampleRate = 44100.0;
+
+    // Helper methods for LUFS calculation
+    void updateLUFSMeasurements(const juce::AudioBuffer<float>& buffer);
+    float calculateSimpleLUFS(const juce::AudioBuffer<float>& buffer, int numSamplesToUse) const;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(TrackTweakAudioProcessor)
 };
