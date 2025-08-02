@@ -55,6 +55,10 @@ public:
     float getShortTermLUFS() const;
     float getIntegratedLUFS() const;
 
+    // Spectrum analyzer access for GUI
+    void getSpectrumData(std::vector<float>& spectrumData);
+    static constexpr int spectrumSize = 512; // Number of frequency bins for display
+
 private:
     //==============================================================================
     // RMS calculation variables
@@ -72,9 +76,34 @@ private:
     int shortTermWritePos = 0;
     double sampleRate = 44100.0;
 
+    // Spectrum analyzer variables
+    static constexpr int fftOrder = 11;         // 2^11 = 2048 samples
+    static constexpr int fftSize = 1 << fftOrder; // 2048
+
+    juce::dsp::FFT fft;
+    juce::dsp::WindowingFunction<float> window;
+
+    std::array<float, fftSize> fftData;
+    std::array<float, fftSize * 2> fftBuffer; // Complex FFT needs 2x size
+    std::vector<float> spectrumMagnitudes;
+
+    juce::AbstractFifo abstractFifo;
+    std::array<float, fftSize> fifoBuffer;
+
+    int fifoIndex = 0;
+    bool nextFFTBlockReady = false;
+
+    juce::CriticalSection spectrumDataMutex;
+    std::vector<float> smoothedSpectrum;
+
     // Helper methods for LUFS calculation
     void updateLUFSMeasurements(const juce::AudioBuffer<float>& buffer);
     float calculateSimpleLUFS(const juce::AudioBuffer<float>& buffer, int numSamplesToUse) const;
+
+    // Helper methods for spectrum analysis
+    void pushSamplesToFifo(const juce::AudioBuffer<float>& buffer);
+    void performFFT();
+    void updateSpectrum();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(TrackTweakAudioProcessor)
 };

@@ -23,6 +23,7 @@
     <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
     <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
     <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_dsp" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
     <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
     <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
     <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
@@ -48,6 +49,7 @@
         <MODULEPATH id="juce_graphics" path="../../Desktop/JUCE/modules"/>
         <MODULEPATH id="juce_gui_basics" path="../../Desktop/JUCE/modules"/>
         <MODULEPATH id="juce_gui_extra" path="../../Desktop/JUCE/modules"/>
+        <MODULEPATH id="juce_dsp" path="../../Desktop/JUCE/modules"/>
       </MODULEPATHS>
     </VS2022>
   </EXPORTFORMATS>
